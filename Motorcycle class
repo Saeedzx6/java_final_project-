@@ -1,0 +1,44 @@
+package com.mycompany.vehiclerentalsystem;
+
+class Motorcycle extends Vehicle {
+    private boolean hasSidecar;
+    private int engineCC;
+
+    public Motorcycle() {
+        super();
+        this.hasSidecar = false;
+        this.engineCC = 0;
+    }
+
+    public Motorcycle(String mk, String mdl, int yr, double prc, ColorOptions cols, boolean sidecar, int cc) {
+        super(mk, mdl, yr, prc, cols);
+        if (cc < 0)
+            throw new InvalidVehicleException("Engine CC cannot be negative!");
+
+        this.hasSidecar = sidecar;
+        this.engineCC = cc;
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Sidecar: " + (hasSidecar ? "Yes" : "No") + "\nEngine CC: " + engineCC);
+    }
+
+    @Override
+    public double getRentalPrice(int days) {
+        double dailyRate = 30;
+        return dailyRate * days;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        Motorcycle other = (Motorcycle) obj;
+        return hasSidecar == other.hasSidecar && engineCC == other.engineCC;
+    }
+
+    Vehicle createVehicle(int vehicleNumber) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+}

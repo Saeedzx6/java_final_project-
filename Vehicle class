@@ -1,0 +1,60 @@
+/*
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.vehiclerentalsystem;
+
+abstract class Vehicle {
+    protected String make;
+    protected String model;
+    protected int year;
+    protected double price;
+    protected ColorOptions colors;
+    protected static int vehicleCount = 0;
+
+    public Vehicle() {
+        this.make = "Unknown";
+        this.model = "Unknown";
+        this.year = 0;
+        this.price = 0.0;
+        this.colors = new ColorOptions();
+        this.colors.exteriorColor = "Unknown";
+        this.colors.interiorColor = "Unknown";
+        vehicleCount++;
+    }
+
+    public Vehicle(String mk, String mdl, int yr, double prc, ColorOptions cols) {
+        if (yr < 1886 || yr > 2025)
+            throw new InvalidVehicleException("Invalid year for the vehicle!");
+        if (prc < 0)
+            throw new InvalidVehicleException("Price cannot be negative!");
+
+        this.make = mk;
+        this.model = mdl;
+        this.year = yr;
+        this.price = prc;
+        this.colors = cols;
+        vehicleCount++;
+    }
+
+    public void displayInfo() {
+        System.out.println("Manufacturer: " + make + "\nModel: " + model + "\nYear: " + year + "\nPrice: $" + price);
+        System.out.println("Colors: Exterior=" + colors.exteriorColor + ", Interior=" + colors.interiorColor);
+    }
+
+    public static int getVehicleCount() {
+        return vehicleCount;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Vehicle other = (Vehicle) obj;
+        return make.equals(other.make) && model.equals(other.model) && year == other.year && price == other.price
+               && colors.exteriorColor.equals(other.colors.exteriorColor)
+               && colors.interiorColor.equals(other.colors.interiorColor);
+    }
+
+    public abstract double getRentalPrice(int days);
+}

@@ -1,0 +1,48 @@
+/*
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.vehiclerentalsystem;
+
+class Truck extends Vehicle {
+    private double cargoCapacity;
+    private boolean hasTrailer;
+
+    public Truck() {
+        super();
+        this.cargoCapacity = 0.0;
+        this.hasTrailer = false;
+    }
+
+    public Truck(String mk, String mdl, int yr, double prc, ColorOptions cols, double capacity, boolean trailer) {
+        super(mk, mdl, yr, prc, cols);
+        if (capacity < 0)
+            throw new InvalidVehicleException("Cargo capacity cannot be negative!");
+
+        this.cargoCapacity = capacity;
+        this.hasTrailer = trailer;
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Cargo Capacity: " + cargoCapacity + " tons\nTrailer: " + (hasTrailer ? "Yes" : "No"));
+    }
+
+    @Override
+    public double getRentalPrice(int days) {
+        double dailyRate = 100;
+        return dailyRate * days;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        Truck other = (Truck) obj;
+        return cargoCapacity == other.cargoCapacity && hasTrailer == other.hasTrailer;
+    }
+
+    Vehicle createVehicle(int vehicleNumber) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+}

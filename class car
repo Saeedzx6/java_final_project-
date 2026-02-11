@@ -1,0 +1,49 @@
+/*
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.vehiclerentalsystem;
+
+class Car extends Vehicle {
+    private int numDoors;
+    private boolean isElectric;
+
+    public Car() {
+        super();
+        this.numDoors = 0;
+        this.isElectric = false;
+    }
+
+    public Car(String mk, String mdl, int yr, double prc, ColorOptions cols, int doors, boolean electric) {
+        super(mk, mdl, yr, prc, cols);
+        if (doors < 0)
+            throw new InvalidVehicleException("Number of doors cannot be negative!");
+
+        this.numDoors = doors;
+        this.isElectric = electric;
+    }
+    
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Number of Doors: " + numDoors + "\nElectric: " + (isElectric ? "Yes" : "No"));
+    }
+
+    @Override
+    public double getRentalPrice(int days) {
+        double dailyRate = isElectric ? 80 : 50;
+        return dailyRate * days;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        Car other = (Car) obj;
+        return numDoors == other.numDoors && isElectric == other.isElectric;
+    }
+
+    Vehicle createVehicle(int vehicleNumber) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+}

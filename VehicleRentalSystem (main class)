@@ -1,0 +1,246 @@
+
+package com.mycompany.vehiclerentalsystem;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class VehicleRentalSystem  {
+    private static Scanner scanner = new Scanner(System.in);
+    private static List<Vehicle> vehicles = new ArrayList<>();
+
+    public Vehicle createVehicle(int vehicleNumber) {
+        System.out.println("\nAdding Vehicle #" + vehicleNumber);
+        System.out.println("Select vehicle type:");
+        System.out.println("1. Car");
+        System.out.println("2. Truck");
+        System.out.println("3. Motorcycle");
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        switch (choice) {
+            case 1:
+                return new Car().createVehicle(vehicleNumber);
+            case 2:
+                return new Truck().createVehicle(vehicleNumber);
+            case 3:
+                return new Motorcycle().createVehicle(vehicleNumber);
+            default:
+                System.out.println("Invalid choice!");
+                return null;
+        }
+    }
+
+    
+    public void calculateRentalCost(Vehicle vehicle) {
+        System.out.print("Enter the rental period in days: ");
+        int days = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        double totalCost = vehicle.getRentalPrice(days);
+        System.out.println("The total rental cost for " + days + " days is: $" + totalCost);
+    }
+
+    public void viewAllVehicles() {
+        if (vehicles.isEmpty()) {
+            System.out.println("No vehicles available.");
+            return;
+        }
+        for (int i = 0; i < vehicles.size(); i++) {
+            System.out.println("Vehicle #" + i);
+            vehicles.get(i).displayInfo();
+            System.out.println("Sample rental price for 7 days: $" + vehicles.get(i).getRentalPrice(7));
+            System.out.println();
+        }
+    }
+
+    public void searchVehicles() {
+        if (vehicles.isEmpty()) {
+            System.out.println("No vehicles available to search.");
+            return;
+        }
+        System.out.print("Enter search term (make, model, or year): ");
+        String searchTerm = scanner.nextLine().trim().toLowerCase();
+        boolean found = false;
+
+        for (int i = 0; i < vehicles.size(); i++) {
+            Vehicle vehicle = vehicles.get(i);
+            if (vehicle.make.toLowerCase().contains(searchTerm) ||
+                vehicle.model.toLowerCase().contains(searchTerm) ||
+                String.valueOf(vehicle.year).equals(searchTerm)) {
+                System.out.println("Vehicle #" + i);
+                vehicle.displayInfo();
+                System.out.println("Sample rental price for 7 days: $" + vehicle.getRentalPrice(7));
+                System.out.println();
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No vehicles found matching '" + searchTerm + "'.");
+        }
+    }
+
+    public void managerMenu() {
+        boolean running = true;
+        while (running) {
+            System.out.println("\nManager Menu:");
+            System.out.println("1. Add Vehicle");
+            System.out.println("2. Delete Vehicle");
+            System.out.println("3. View All Vehicles");
+            System.out.println("4. Search Vehicles");
+            System.out.println("5. Back");
+            System.out.print("Choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    Vehicle newVehicle = createVehicle(vehicles.size() + 1);
+                    if (newVehicle != null) {
+                        vehicles.add(newVehicle);
+                        System.out.println("Vehicle added successfully.");
+                    }
+                    break;
+                case 2:
+                    if (vehicles.isEmpty()) {
+                        System.out.println("No vehicles to delete.");
+                        break;
+                    }
+                    viewAllVehicles();
+                    System.out.print("Enter the index of the vehicle to delete: ");
+                    int deleteIndex = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    if (deleteIndex >= 0 && deleteIndex < vehicles.size()) {
+                        vehicles.remove(deleteIndex);
+                        System.out.println("Vehicle deleted successfully.");
+                    } else {
+                        System.out.println("Invalid vehicle index!");
+                    }
+                    break;
+                case 3:
+                    viewAllVehicles();
+                    break;
+                case 4:
+                    searchVehicles();
+                    break;
+                case 5:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    //test//
+    public void customerMenu() {
+        boolean running = true;
+        while (running) {
+            System.out.println("\nCustomer Menu:");
+            System.out.println("1. View Vehicles for Purchase or Rent");
+            System.out.println("2. Rent a Vehicle");
+            System.out.println("3. Buy a Vehicle");
+            System.out.println("4. Search Vehicles");
+            System.out.println("5. Back");
+            System.out.print("Choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    viewAllVehicles();
+                    break;
+                case 2:
+                    if (vehicles.isEmpty()) {
+                        System.out.println("No vehicles available for rent.");
+                        break;
+                    }
+                    viewAllVehicles();
+                    System.out.print("Enter the index of the vehicle to rent: ");
+                    int rentIndex = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    if (rentIndex >= 0 && rentIndex < vehicles.size()) {
+                        calculateRentalCost(vehicles.get(rentIndex));
+                    } else {
+                        System.out.println("Invalid vehicle index!");
+                    }
+                    break;
+                case 3:
+                    if (vehicles.isEmpty()) {
+                        System.out.println("No vehicles available for purchase.");
+                        break;
+                    }
+                    viewAllVehicles();
+                    System.out.print("Enter the index of the vehicle to buy: ");
+                    int buyIndex = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    if (buyIndex >= 0 && buyIndex < vehicles.size()) {
+                        Vehicle vehicle = vehicles.get(buyIndex);
+                        System.out.println("Purchase details:");
+                        vehicle.displayInfo();
+                        System.out.println("Total purchase cost: $" + vehicle.price);
+                        System.out.print("Confirm purchase? (y/n): ");
+                        String confirm = scanner.nextLine();
+                        if (confirm.equalsIgnoreCase("y")) {
+                            vehicles.remove(buyIndex);
+                            System.out.println("Vehicle purchased successfully.");
+                        } else {
+                            System.out.println("Purchase cancelled.");
+                        }
+                    } else {
+                        System.out.println("Invalid vehicle index!");
+                    }
+                    break;
+                case 4:
+                    searchVehicles();
+                    break;
+                case 5:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            boolean running = true;
+            VehicleRentalSystem system = new VehicleRentalSystem();
+            while (running) {
+                System.out.println("\nWelcome to Vehicle Rental System");
+                System.out.println("1. Manager");
+                System.out.println("2. Customer");
+                System.out.println("3. Search Vehicles");
+                System.out.println("4. Exit");
+                System.out.print("Choice: ");
+                int role = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                switch (role) {
+                    case 1:
+                        system.managerMenu();
+                        break;
+                    case 2:
+                        system.customerMenu();
+                        break;
+                    case 3:
+                        system.searchVehicles();
+                        break;
+                    case 4:
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid choice!");
+                }
+            }
+
+            System.out.println("Total Vehicles in System: " + Vehicle.getVehicleCount());
+        } catch (InvalidVehicleException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+}

@@ -1,0 +1,15 @@
+/*
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbhfs://nbhfs/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.vehiclerentalsystem;
+
+/**
+ *
+ * @author DELL
+ */
+class InvalidVehicleException extends RuntimeException {
+    public InvalidVehicleException(String message) {
+        super(message);
+    }
+}
